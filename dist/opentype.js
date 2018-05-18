@@ -800,17 +800,33 @@
 	Path.prototype.draw = function(ctx) {
 	    var this$1 = this;
 
+	    function roundTo2DecimalPlaces(v) {
+	        return (Math.round(v * 100) / 100);
+	    }
+
 	    ctx.beginPath();
 	    for (var i = 0; i < this.commands.length; i += 1) {
 	        var cmd = this$1.commands[i];
 	        if (cmd.type === 'M') {
-	            ctx.moveTo(cmd.x, cmd.y);
+	            ctx.moveTo(roundTo2DecimalPlaces(cmd.x), roundTo2DecimalPlaces(cmd.y));
 	        } else if (cmd.type === 'L') {
-	            ctx.lineTo(cmd.x, cmd.y);
+	            ctx.lineTo(roundTo2DecimalPlaces(cmd.x), roundTo2DecimalPlaces(cmd.y));
 	        } else if (cmd.type === 'C') {
-	            ctx.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+	            ctx.bezierCurveTo(
+	                roundTo2DecimalPlaces(cmd.x1),
+	                roundTo2DecimalPlaces(cmd.y1),
+	                roundTo2DecimalPlaces(cmd.x2),
+	                roundTo2DecimalPlaces(cmd.y2),
+	                roundTo2DecimalPlaces(cmd.x),
+	                roundTo2DecimalPlaces(cmd.y)
+	            );
 	        } else if (cmd.type === 'Q') {
-	            ctx.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
+	            ctx.quadraticCurveTo(
+	                roundTo2DecimalPlaces(cmd.x1),
+	                roundTo2DecimalPlaces(cmd.y1),
+	                roundTo2DecimalPlaces(cmd.x),
+	                roundTo2DecimalPlaces(cmd.y)
+	            );
 	        } else if (cmd.type === 'Z') {
 	            ctx.closePath();
 	        }
@@ -11241,7 +11257,8 @@
 	            fontFamily: {en: options.familyName || ' '},
 	            fontSubfamily: {en: options.styleName || ' '},
 	            fullName: {en: options.fullName || options.familyName + ' ' + options.styleName},
-	            postScriptName: {en: options.postScriptName || options.familyName + options.styleName},
+	            // postScriptName may not contain any whitespace
+	            postScriptName: {en: options.postScriptName || (options.familyName + options.styleName).replace(/\s/g, '')},
 	            designer: {en: options.designer || ' '},
 	            designerURL: {en: options.designerURL || ' '},
 	            manufacturer: {en: options.manufacturer || ' '},

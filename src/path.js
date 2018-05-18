@@ -199,17 +199,33 @@ Path.prototype.getBoundingBox = function() {
  * @param {CanvasRenderingContext2D} ctx - A 2D drawing context.
  */
 Path.prototype.draw = function(ctx) {
+    function roundTo2DecimalPlaces(v) {
+        return (Math.round(v * 100) / 100);
+    }
+
     ctx.beginPath();
     for (let i = 0; i < this.commands.length; i += 1) {
         const cmd = this.commands[i];
         if (cmd.type === 'M') {
-            ctx.moveTo(cmd.x, cmd.y);
+            ctx.moveTo(roundTo2DecimalPlaces(cmd.x), roundTo2DecimalPlaces(cmd.y));
         } else if (cmd.type === 'L') {
-            ctx.lineTo(cmd.x, cmd.y);
+            ctx.lineTo(roundTo2DecimalPlaces(cmd.x), roundTo2DecimalPlaces(cmd.y));
         } else if (cmd.type === 'C') {
-            ctx.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+            ctx.bezierCurveTo(
+                roundTo2DecimalPlaces(cmd.x1),
+                roundTo2DecimalPlaces(cmd.y1),
+                roundTo2DecimalPlaces(cmd.x2),
+                roundTo2DecimalPlaces(cmd.y2),
+                roundTo2DecimalPlaces(cmd.x),
+                roundTo2DecimalPlaces(cmd.y)
+            );
         } else if (cmd.type === 'Q') {
-            ctx.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
+            ctx.quadraticCurveTo(
+                roundTo2DecimalPlaces(cmd.x1),
+                roundTo2DecimalPlaces(cmd.y1),
+                roundTo2DecimalPlaces(cmd.x),
+                roundTo2DecimalPlaces(cmd.y)
+            );
         } else if (cmd.type === 'Z') {
             ctx.closePath();
         }
